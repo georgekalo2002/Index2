@@ -3,140 +3,277 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Σύστημα Αποκομιδής Τοξικότητας</title>
+  <title>HELL NAHHHHHHHHHHHHHHH</title>
   <style>
     body {
-      background-color: #121212;
-      color: #e0e0e0;
-      font-family: 'Courier New', Courier, monospace;
+      background-color: #2b2b36;
+      background-image: radial-gradient(#3a3a48 1px, transparent 1px);
+      background-size: 20px 20px;
+      color: #fff;
+      font-family: 'Trebuchet MS', sans-serif;
       text-align: center;
-      padding: 50px 20px;
       margin: 0;
+      padding: 30px 10px;
+      user-select: none;
     }
 
-    h1 {
-      color: #ff4444;
-      font-size: 2em;
-      margin-bottom: 10px;
+    h1 { 
+      color: #ff3366; 
+      text-transform: uppercase;
+      text-shadow: 2px 2px 0px #000;
+      margin-bottom: 5px;
     }
 
     p {
+      color: #b8b8c7;
       font-size: 1.1em;
       margin-bottom: 30px;
-      color: #aaaaaa;
     }
 
-    textarea {
+    #scoreBoard { 
+      font-size: 1.8em; 
+      font-weight: bold;
+      color: #ffd700;
+      text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+      margin-bottom: 40px; 
+      height: 40px;
+    }
+
+    .game-board {
+      display: grid;
+      grid-template-columns: repeat(3, 110px);
+      gap: 20px;
+      justify-content: center;
+      margin: 0 auto;
+      transform: perspective(600px) rotateX(25deg);
+      transform-style: preserve-3d;
+    }
+
+    .hole {
+      width: 110px;
+      height: 110px;
+      background-color: #0a0a0f;
+      border-radius: 50%;
+      box-shadow: 
+        inset 0 15px 25px rgba(0, 0, 0, 0.9), 
+        inset 0 -5px 10px rgba(255, 255, 255, 0.1),
+        0 5px 0 #1a1a24; 
+      position: relative;
+      overflow: hidden; 
+      cursor: crosshair;
+    }
+
+    .hole:active { 
+      background-color: #3d0000; 
+      box-shadow: inset 0 20px 30px rgba(0, 0, 0, 0.9);
+    }
+
+    .target-img {
       width: 90%;
-      max-width: 600px;
-      height: 200px;
-      background-color: #1e1e1e;
-      color: #ffffff;
-      border: 2px solid #333;
-      border-radius: 8px;
-      padding: 15px;
-      font-size: 16px;
-      font-family: inherit;
-      resize: none;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      height: 90%;
+      object-fit: cover;
+      border-radius: 50%; 
+      position: absolute;
+      bottom: -100%; 
+      left: 5%;
+      transition: bottom 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+      pointer-events: none; 
     }
 
-    textarea:focus {
-      outline: none;
-      border-color: #ff4444;
+    .hole.up .target-img {
+      bottom: 5%; 
     }
 
-    button {
-      background-color: #ff4444;
-      color: #fff;
-      border: none;
-      padding: 15px 40px;
-      font-size: 1.2em;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 5px;
-      transition: all 0.2s ease-in-out;
-      box-shadow: 0 4px 8px rgba(255, 68, 68, 0.2);
-    }
-
-    button:hover {
-      background-color: #cc0000;
-      transform: scale(1.05);
-    }
-
-    /* Animation εξαΰλωσης */
-    .nuke-animation {
-      animation: nukeIt 1s forwards;
-    }
-
-    @keyframes nukeIt {
-      0% { transform: scale(1); opacity: 1; filter: blur(0); }
-      50% { transform: scale(0.9) translateY(20px); opacity: 0.5; filter: blur(4px); background-color: #ff0000; }
-      100% { transform: scale(0) translateY(100px); opacity: 0; filter: blur(10px); }
-    }
-
-    #successMessage {
+    .pow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3em;
+      pointer-events: none;
       display: none;
-      margin-top: 40px;
-      padding: 20px;
-      border: 1px solid #333;
-      border-radius: 8px;
-      background-color: #1a1a1a;
+    }
+    
+    .button-container {
+      margin-top: 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
     }
 
-    .success-text {
-      color: #00ff00;
-      font-size: 1.3em;
+    #startBtn {
+      padding: 15px 40px;
+      font-size: 1.5em;
+      background: linear-gradient(to bottom, #ff4c4c, #cc0000);
+      color: white;
+      border: 3px solid #660000;
+      border-radius: 12px;
+      cursor: pointer;
       font-weight: bold;
-      margin-bottom: 10px;
+      box-shadow: 0 6px 0 #660000;
+      transition: all 0.1s;
     }
 
-    .karma-text {
-      color: #e0e0e0;
-      font-size: 1.1em;
+    #startBtn:active {
+      transform: translateY(6px);
+      box-shadow: 0 0px 0 #660000;
+    }
+    
+    /* Το κουμπί δώρο που την πάει στο Spotify */
+    #giftBtn {
+      display: none; /* Αρχικά κρυμμένο */
+      padding: 15px 40px;
+      font-size: 1.5em;
+      background: linear-gradient(to bottom, #1db954, #1ed760);
+      color: white;
+      text-decoration: none;
+      border: 3px solid #14833b;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 6px 0 #14833b;
+      transition: all 0.1s;
+    }
+
+    #giftBtn:active {
+      transform: translateY(6px);
+      box-shadow: 0 0px 0 #14833b;
     }
   </style>
 </head>
 <body>
 
-  <div id="mainContainer">
-    <h1>Σύστημα Αποκομιδής Τοξικότητας ☣️</h1>
-    <p>Γράψε αναλυτικά τι μαλακία συνέβη σήμερα και ποιος πρέπει να πάει στο διάολο.</p>
-    
-    <textarea id="rantBox" placeholder="Ρίξε το δηλητήριο σου εδώ..."></textarea><br>
-    
-    <button id="nukeBtn" onclick="triggerNuke()">ΕΞΑΥΛΩΣΗ</button>
+  <h1>ΕΣΥΥΥΥΟΥΥΥΥΥΥΥΥΥΥΥΥΥΥΥΥΥΥΥΥ ΕΙΣΑΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙ</h1>
+  <p>Εχεις ΑΚΡΙΒΩΣ 15 δευτερολεπτα προτεινω να κερδισειςςςςς</p>
+  
+  <div id="scoreBoard">Σκορ: <span id="score">0</span></div>
+  
+  <div class="game-board">
+    <div class="hole" id="hole-0"><img src="" class="target-img"><div class="pow">💥</div></div>
+    <div class="hole" id="hole-1"><img src="" class="target-img"><div class="pow">💥</div></div>
+    <div class="hole" id="hole-2"><img src="" class="target-img"><div class="pow">💥</div></div>
+    <div class="hole" id="hole-3"><img src="" class="target-img"><div class="pow">💥</div></div>
+    <div class="hole" id="hole-4"><img src="" class="target-img"><div class="pow">💥</div></div>
+    <div class="hole" id="hole-5"><img src="" class="target-img"><div class="pow">💥</div></div>
+    <div class="hole" id="hole-6"><img src="" class="target-img"><div class="pow">💥</div></div>
+    <div class="hole" id="hole-7"><img src="" class="target-img"><div class="pow">💥</div></div>
+    <div class="hole" id="hole-8"><img src="" class="target-img"><div class="pow">💥</div></div>
   </div>
 
-  <div id="successMessage">
-    <div class="success-text">✅ Ο στόχος κλείδωσε επιτυχώς.</div>
-    <div class="karma-text">Τα δεδομένα διαγράφηκαν. Στέλνουμε 10 χρόνια κακό κάρμα, αϋπνία και γαστρεντερίτιδα στους υπεύθυνους. Εσύ πήγαινε να αράξεις.</div>
+  <div class="button-container">
+    <button id="startBtn" onclick="ksekinaToPaignidi()">ΠΑΜΕ ΛΙΓΟ</button>
+    <a id="giftBtn" href="https://open.spotify.com/track/6dS2RZa86FEIQxCMxASMe6?si=3c3cda5d034f44d7" target="_blank">ΠΑΤΑ ΜΕEEEEE</a>
   </div>
 
   <script>
-    function triggerNuke() {
-      const box = document.getElementById('rantBox');
-      const btn = document.getElementById('nukeBtn');
-      const msg = document.getElementById('successMessage');
+    const holes = document.querySelectorAll('.hole');
+    const scoreDisplay = document.getElementById('score');
+    const scoreBoard = document.getElementById('scoreBoard');
+    const startBtn = document.getElementById('startBtn');
+    const giftBtn = document.getElementById('giftBtn');
+    
+    let lastHole;
+    let timeIsUp = false;
+    let currentScore = 0;
+    let popTimer;
+    const SCORE_THRESHOLD = 10; // Πρέπει να χτυπήσει 10 για το δώρο
 
-      // Αν είναι άδειο, δεν κάνει τίποτα
-      if(box.value.trim() === "") {
-        box.placeholder = "Γράψε κάτι πρώτα ρε...";
-        return;
-      }
+    const faces = [
+      '163dd8bf-386c-4298-9e15-fd85c775fca5.jpeg',
+      '1865c4d2-c09d-4101-bda1-fa4bf81a9d93.jpeg',
+      '3ad0d122-0365-4145-8562-6fa641c97ba0.jpeg',
+      '4e6f8f78-eafc-4a17-91fc-dabdd64dfea0.jpeg',
+      '54a5138f-ed92-4e7e-9ef1-3e82aebd7cd7.jpeg',
+      '62145a22-d496-4ec2-98e7-16840dcdd092.jpeg',
+      '837eaa1f-93f5-4ab8-a7a7-95cfdc5f481a.jpeg',
+      'b1d5efa1-8423-4256-8e3c-43e81f3082e8.jpeg',
+      'eca63dd9-1965-4347-b9d7-b3e35ae0a8d4.jpeg',
+      'f99cd65c-369d-4264-aa7e-0bf04fcfd0f1.jpeg'
+    ];
 
-      // Προσθήκη του animation
-      box.classList.add('nuke-animation');
-      btn.style.display = 'none';
-      
-      // Εμφάνιση του μηνύματος μετά το animation
-      setTimeout(() => {
-        box.style.display = 'none';
-        msg.style.display = 'block';
-      }, 1000);
+    function getRandomTime(min, max) {
+      return Math.round(Math.random() * (max - min) + min);
     }
-  </script>
 
+    function getRandomHole(holes) {
+      const idx = Math.floor(Math.random() * holes.length);
+      const hole = holes[idx];
+      if (hole === lastHole) {
+        return getRandomHole(holes);
+      }
+      lastHole = hole;
+      return hole;
+    }
+
+    function popFace() {
+      const time = getRandomTime(600, 1200); 
+      const hole = getRandomHole(holes);
+      const randomFace = faces[Math.floor(Math.random() * faces.length)];
+      
+      const imgTag = hole.querySelector('.target-img');
+      imgTag.src = randomFace;
+      
+      hole.classList.add('up');
+      
+      popTimer = setTimeout(() => {
+        hole.classList.remove('up'); 
+        if (!timeIsUp) {
+          popFace(); 
+        }
+      }, time);
+    }
+
+    function ksekinaToPaignidi() {
+      scoreBoard.innerHTML = 'Σκορ: <span id="score">0</span>';
+      currentScore = 0;
+      timeIsUp = false;
+      startBtn.style.display = 'none'; 
+      giftBtn.style.display = 'none'; // Κρύβουμε το δώρο στην αρχή κάθε γύρου
+      
+      popFace();
+      
+      setTimeout(() => {
+        timeIsUp = true;
+        clearTimeout(popTimer);
+        
+        holes.forEach(hole => hole.classList.remove('up'));
+        
+        // Έλεγχος του Threshold (Στόχου)
+        if (currentScore < SCORE_THRESHOLD) {
+          scoreBoard.innerHTML = `ΤΕΛΟΣ: ${currentScore}. Ξαναπροσπάθησε, έχει δωράκι TRUST `;
+          startBtn.style.display = 'inline-block';
+          startBtn.innerText = 'ΞΑΝΑΠΑΙΞΕ';
+        } else {
+          scoreBoard.innerHTML = `Σκορ: ${currentScore}. WINWIN Δες από κάτω `;
+          startBtn.style.display = 'none'; // Προαιρετικά, κρύβουμε το ΞΑΝΑΠΑΙΞΕ για να πατήσει το δώρο
+          giftBtn.style.display = 'inline-block';
+        }
+        
+      }, 15000);
+    }
+
+    function hitFace(e) {
+      if (!e.isTrusted) return; 
+      
+      if (this.classList.contains('up')) {
+        currentScore++;
+        document.getElementById('score').textContent = currentScore;
+        
+        this.classList.remove('up');
+        
+        const powEffect = this.querySelector('.pow');
+        powEffect.style.display = 'block';
+        setTimeout(() => {
+          powEffect.style.display = 'none';
+        }, 300);
+      }
+    }
+
+    holes.forEach(hole => {
+      hole.addEventListener('mousedown', hitFace);
+      hole.addEventListener('touchstart', hitFace, {passive: true});
+    });
+  </script>
 </body>
 </html>
